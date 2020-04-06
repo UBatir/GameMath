@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         imgLogo.startAnimation(myanim)
         btnPlay.setOnClickListener {
             intent = Intent(this, Main2Activity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
         btnExit.setOnClickListener {
