@@ -12,58 +12,59 @@ import kotlin.random.Random
 
 class Main2Activity : AppCompatActivity() {
 
-    companion object{
-        const val level_Count=10
-        const val RIGTH_ANSWERS_COUNT="rightAnswersCount"
+    companion object {
+        const val level_Count = 10
+        const val RIGTH_ANSWERS_COUNT = "rightAnswersCount"
     }
 
-    var res: Int=0
-    private var countofQuestion: Int=1
-    private var rightAnswers: Int=0
+    var res: Int = 0
+    private var countofQuestion: Int = 1
+    private var rightAnswers: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
         generationQuestion()
     }
-    fun onClick(view: View){
-        val selectedVariant=(view as Button).text.toString().toInt()
-        if(selectedVariant==res){
+
+    fun onClick(view: View) {
+        val selectedVariant = (view as Button).text.toString().toInt()
+        if (selectedVariant == res) {
             rightAnswers++
-            tvScores.text="Score:$rightAnswers"
-            Toast.makeText(this,"Верно",Toast.LENGTH_SHORT).show()
-            if(countofQuestion== level_Count){
-                val intent=Intent(this,Main3Activity::class.java)
-                intent.putExtra(RIGTH_ANSWERS_COUNT,rightAnswers)
-                intent.putExtra("intent","WIN!")
+            tvScores.text = "Score:$rightAnswers"
+            Toast.makeText(this, "Верно", Toast.LENGTH_SHORT).show()
+            if (countofQuestion == level_Count) {
+                val intent = Intent(this, Main3Activity::class.java)
+                intent.putExtra(RIGTH_ANSWERS_COUNT, rightAnswers)
+                intent.putExtra("intent", "WIN!")
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intent)
-            }
-            else{
+            } else {
                 countofQuestion++
-                tvLevel.text= "Level:$countofQuestion"
+                tvLevel.text = "Level:$countofQuestion"
                 generationQuestion()
             }
-        }
-        else{
-            Toast.makeText(this,"Неверно",Toast.LENGTH_SHORT).show()
-            val intent=Intent(this,Main3Activity::class.java)
-            intent.putExtra(RIGTH_ANSWERS_COUNT,rightAnswers)
-            intent.putExtra("intent","GAME OVER")
+        } else {
+            Toast.makeText(this, "Неверно", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, Main3Activity::class.java)
+            intent.putExtra(RIGTH_ANSWERS_COUNT, rightAnswers)
+            intent.putExtra("intent", "GAME OVER")
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
     }
+
     private fun generationQuestion() {
+        timer.start()
         var firstNumber = Random.nextInt(100)
         var secondNumber = Random.nextInt(100)
         var thirdNumber = Random.nextInt(100)
         val fourthNumber = Random.nextInt(100)
-        if(countofQuestion>=8){
+        if (countofQuestion >= 8) {
             hardLevel()
-        }
-        else if(countofQuestion>=5){
+        } else if (countofQuestion >= 5) {
             middleLevel()
-        }
-        else{
+        } else {
             easyLevel()
         }
         generationWrongAnswer(btnAnswer1)
@@ -78,12 +79,14 @@ class Main2Activity : AppCompatActivity() {
 
         }
     }
-        private fun generationWrongAnswer(button: Button){
-            when(Random.nextBoolean()){
-                true->button.text=(res+ Random.nextInt(10)+1).toString()
-                else->button.text=(res-Random.nextInt(10)-1).toString()
-            }
+
+    private fun generationWrongAnswer(button: Button) {
+        when (Random.nextBoolean()) {
+            true -> button.text = (res + Random.nextInt(10) + 1).toString()
+            else -> button.text = (res - Random.nextInt(10) - 1).toString()
         }
+    }
+
     private fun easyLevel() {
         var firstNumber = Random.nextInt(100)
         var secondNumber = Random.nextInt(100)
@@ -108,60 +111,80 @@ class Main2Activity : AppCompatActivity() {
             }
         }
     }
-        private fun middleLevel(){
-            var firstNumber = Random.nextInt(100)
-            var secondNumber = Random.nextInt(100)
-            var thirdNumber = Random.nextInt(100)
-            val fourthNumber = Random.nextInt(100)
+
+    private fun middleLevel() {
+        var firstNumber = Random.nextInt(100)
+        var secondNumber = Random.nextInt(100)
+        var thirdNumber = Random.nextInt(100)
+        val fourthNumber = Random.nextInt(100)
         when (Random.nextInt(4)) {
             0 -> {
                 tvValue.text = "$firstNumber+$secondNumber*$thirdNumber"
-                res = firstNumber + secondNumber*thirdNumber
+                res = firstNumber + secondNumber * thirdNumber
             }
             1 -> {
-                secondNumber=fourthNumber*thirdNumber
+                secondNumber = fourthNumber * thirdNumber
                 tvValue.text = "$firstNumber-$secondNumber/$thirdNumber"
-                res = firstNumber - secondNumber/thirdNumber
+                res = firstNumber - secondNumber / thirdNumber
             }
             2 -> {
                 tvValue.text = "$firstNumber*$secondNumber*$thirdNumber"
-                res = firstNumber * secondNumber*thirdNumber
+                res = firstNumber * secondNumber * thirdNumber
             }
             else -> {
-                res= Random.nextInt(100)
-                firstNumber=res*secondNumber
+                res = Random.nextInt(100)
+                firstNumber = res * secondNumber
                 tvValue.text = "$firstNumber/$secondNumber-$thirdNumber"
-                res = firstNumber / secondNumber-thirdNumber
+                res = firstNumber / secondNumber - thirdNumber
             }
         }
     }
-        private fun hardLevel(){
-            var firstNumber = Random.nextInt(100)
-            var secondNumber = Random.nextInt(100)
-            var thirdNumber = Random.nextInt(100)
-            val fourthNumber = Random.nextInt(100)
+
+    private fun hardLevel() {
+        var firstNumber = Random.nextInt(100)
+        var secondNumber = Random.nextInt(100)
+        var thirdNumber = Random.nextInt(100)
+        val fourthNumber = Random.nextInt(100)
         when (Random.nextInt(4)) {
             0 -> {
                 tvValue.text = "$firstNumber+$secondNumber*$thirdNumber*$fourthNumber"
-                res = firstNumber + secondNumber*thirdNumber*fourthNumber
+                res = firstNumber + secondNumber * thirdNumber * fourthNumber
             }
             1 -> {
-                firstNumber=thirdNumber*fourthNumber
+                firstNumber = thirdNumber * fourthNumber
                 tvValue.text = "$firstNumber*$secondNumber/($thirdNumber+$fourthNumber)"
-                res = firstNumber * secondNumber/(thirdNumber+fourthNumber)
+                res = firstNumber * secondNumber / (thirdNumber + fourthNumber)
             }
             2 -> {
-                thirdNumber=fourthNumber*secondNumber
+                thirdNumber = fourthNumber * secondNumber
                 tvValue.text = "$firstNumber*$secondNumber-$thirdNumber/$fourthNumber"
-                res = firstNumber * secondNumber-thirdNumber/fourthNumber
+                res = firstNumber * secondNumber - thirdNumber / fourthNumber
             }
             else -> {
-                res= Random.nextInt(100)
-                firstNumber=res*secondNumber*thirdNumber
+                res = Random.nextInt(100)
+                firstNumber = res * secondNumber * thirdNumber
                 tvValue.text = "$firstNumber/$secondNumber/$thirdNumber+$fourthNumber"
-                res = firstNumber / secondNumber/thirdNumber+fourthNumber
+                res = firstNumber / secondNumber / thirdNumber + fourthNumber
             }
         }
     }
-}
 
+    private val timer = object : CountDownTimer(15000, 1000) {
+        override fun onFinish() {
+            val intent = Intent(this@Main2Activity, Main3Activity::class.java)
+            intent.putExtra("intent", "GAME OVER")
+            intent.putExtra(RIGTH_ANSWERS_COUNT, rightAnswers)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent)
+            finish()
+        }
+        override fun onTick(millisUntilFinished: Long) {
+            tvTimer.text = "00:" + millisUntilFinished / 1000
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        timer.cancel()
+    }
+}
